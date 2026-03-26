@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Sync — OpportUnity Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    .email-connect-card { background: linear-gradient(135deg, rgba(110,231,247,0.06), rgba(167,139,250,0.06)); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 48px; text-align: center; margin-bottom: 32px; position: relative; overflow: hidden; }
+    .email-connect-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .email-icon-lg { font-size: 48px; margin-bottom: 16px; }
+    .email-connect-title { font-family: var(--font-display); font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .email-connect-sub { color: var(--text-secondary); font-size: 14px; max-width: 400px; margin: 0 auto 28px; }
+    .btn-connect-gmail { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: #fff; color: #333; font-weight: 700; font-size: 15px; border-radius: var(--radius-md); transition: var(--transition); border: none; cursor: pointer; font-family: var(--font-display); }
+    .btn-connect-gmail:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,255,255,0.2); }
+    .email-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; display: flex; align-items: center; gap: 16px; transition: var(--transition); margin-bottom: 12px; }
+    .email-card:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
+    .email-card-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .email-card-body { flex: 1; }
+    .email-card-subject { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+    .email-card-from { font-size: 12px; color: var(--text-muted); }
+    .email-card-time { font-size: 11px; color: var(--text-muted); }
+    .email-card-action { display: flex; align-items: center; gap: 8px; }
+    .add-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; background: rgba(110,231,247,0.1); border: 1px solid rgba(110,231,247,0.2); border-radius: 50px; color: var(--accent); font-size: 12px; font-weight: 700; cursor: pointer; transition: var(--transition); }
+    .add-btn:hover { background: rgba(110,231,247,0.2); }
+    .added-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2); border-radius: 50px; color: var(--accent3); font-size: 12px; font-weight: 700; }
+  </style>
+</head>
+<body>
+<div class="main-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-icon">◈</span><span>OpportUnity</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">◉</span> Dashboard</a>
+      <a href="opportunities.html"><span class="nav-icon">⊞</span> All Opportunities</a>
+      <a href="saved.html"><span class="nav-icon">◈</span> Saved</a>
+      <a href="applied.html"><span class="nav-icon">✓</span> Applied</a>
+      <a href="deadline-tracker.html"><span class="nav-icon">⏰</span> Deadlines</a>
+      <a href="email-sync.html" class="active"><span class="nav-icon">✉</span> Email Sync</a>
+      <a href="web-scraping.html"><span class="nav-icon">🌐</span> Web Scraping</a>
+      <a href="profile.html"><span class="nav-icon">◎</span> Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar">RK</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarName">Student</div>
+          <div class="user-email" id="sidebarEmail">student@uni.edu</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>📧 Email Sync</h1>
+      <p>Connect your Gmail to automatically detect and import opportunity emails</p>
+    </div>
+
+    <div class="email-connect-card" id="connectSection">
+      <div class="email-icon-lg">📬</div>
+      <div class="email-connect-title">Connect your Gmail</div>
+      <div class="email-connect-sub">We scan for subject lines like "Internship Opportunity", "Hackathon Registration", etc. and automatically import them.</div>
+      <button class="btn-connect-gmail" onclick="connectGmail()">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Connect Gmail Account
+      </button>
+    </div>
+
+    <div id="emailsSection" style="display:none">
+      <div class="automation-panel" style="margin-bottom:24px">
+        <div class="auto-status-dot"></div>
+        <div class="auto-info">
+          <div class="auto-title">Gmail connected · student@gmail.com</div>
+          <div class="auto-sub">Scanning inbox every 30 minutes · 0 opportunities found this week</div>
+        </div>
+        <button class="trigger-scrape-btn" onclick="scanEmails()">📧 Scan Now</button>
+      </div>
+
+      <div class="section-heading">
+        <h2>Detected Opportunities in Email</h2>
+        <span style="font-size:13px;color:var(--text-muted)">0 found</span>
+      </div>
+
+      <div id="emailList"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Replace these with your actual project URL and anon public API key
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+const MOCK_EMAILS = [];
+let emails = JSON.parse(JSON.stringify(MOCK_EMAILS));
+
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("ohub_user") || "{}");
+  const name = user.name || "Student";
+  const email = user.email || "student@university.edu";
+  const initials = name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  document.getElementById("sidebarAvatar").textContent = initials;
+  document.getElementById("sidebarName").textContent = name;
+  document.getElementById("sidebarEmail").textContent = email;
+});
+
+function connectGmail() {
+  const btn = document.querySelector(".btn-connect-gmail");
+  btn.innerHTML = '<div class="spinner"></div> Connecting...';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById("connectSection").style.display = "none";
+    document.getElementById("emailsSection").style.display = "block";
+    renderEmails();
+    showToast("✅ Gmail connected! Found 0 opportunities.", "success");
+  }, 2000);
+}
+
+function renderEmails() {
+  const list = document.getElementById("emailList");
+  list.innerHTML = emails.map(e => `
+    <div class="email-card">
+      <div class="email-card-icon" style="background:rgba(110,231,247,0.08)">${e.icon}</div>
+      <div class="email-card-body">
+        <div class="email-card-subject">${e.subject}</div>
+        <div class="email-card-from">From: ${e.from} · Deadline: ${e.deadline}</div>
+      </div>
+      <div class="email-card-action">
+        <span class="badge badge-${e.type}" style="font-size:10px">${e.type}</span>
+        ${e.added
+          ? `<span class="added-badge">✓ Added</span>`
+          : `<button class="add-btn" id="add-btn-${e.id}" onclick="addToBoard('${e.id}')">+ Add to Dashboard</button>`
+        }
+      </div>
+    </div>`).join("");
+}
+
+async function addToBoard(id) {
+  const emailObj = emails.find(e => e.id === id);
+  if (!emailObj) return;
+
+  const btn = document.getElementById(`add-btn-${id}`);
+  if(btn) btn.innerHTML = "Adding...";
+
+  // Optional: Supabase backend insertion
+  /*
+  const { data, error } = await supabase.from('opportunities').insert([
+    {
+      source: 'gmail',
+      title: emailObj.subject,
+      organization: emailObj.org,
+      deadline: emailObj.deadline,
+      type: emailObj.type
+    }
+  ]);
+  if (error) {
+    showToast("❌ Failed to store in database", "error");
+    if(btn) btn.innerHTML = "+ Add to Dashboard";
+    return;
+  }
+  */
+
+  emailObj.added = true;
+  renderEmails();
+  showToast(`✅ "${emailObj.org}" stored onto Dashboard!`, "success");
+}
+
+function scanEmails() {
+  showToast("📧 Scanning inbox...", "");
+  setTimeout(() => showToast("✅ Scan complete! No new opportunities found.", "success"), 2200);
+}
+
+function showToast(message, type = "") {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 300); }, 3200);
+}
+</script>
+</body>
+</html>

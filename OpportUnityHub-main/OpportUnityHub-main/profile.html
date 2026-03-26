@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile — OpportUnity Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+    .profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; text-align: center; }
+    .profile-avatar-lg { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #080b14; margin: 0 auto 16px; font-family: var(--font-display); }
+    .profile-name { font-family: var(--font-display); font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .profile-email { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .profile-tag { display: inline-flex; padding: 4px 12px; background: rgba(110,231,247,0.08); border: 1px solid rgba(110,231,247,0.15); border-radius: 50px; font-size: 12px; color: var(--accent); font-weight: 600; margin: 3px; }
+    .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px; }
+    .ps-item { text-align: center; }
+    .ps-num { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--text-primary); }
+    .ps-label { font-size: 11px; color: var(--text-muted); }
+    .settings-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 20px; }
+    .settings-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+    .toggle-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .toggle { position: relative; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: rgba(255,255,255,0.1); border-radius: 50px; cursor: pointer; transition: 0.3s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s; }
+    .toggle input:checked + .toggle-slider { background: var(--accent); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+    .save-btn { display: flex; align-items: center; gap: 6px; padding: 10px 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #080b14; font-weight: 700; font-family: var(--font-display); font-size: 14px; border-radius: var(--radius-sm); border: none; cursor: pointer; transition: var(--transition); }
+    .save-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(110,231,247,0.3); }
+    .danger-btn { display: flex; align-items: center; gap: 6px; padding: 10px 24px; background: rgba(248,113,113,0.1); color: var(--accent-red); font-weight: 600; font-size: 14px; border-radius: var(--radius-sm); border: 1px solid rgba(248,113,113,0.2); cursor: pointer; transition: var(--transition); font-family: var(--font-body); }
+    .danger-btn:hover { background: rgba(248,113,113,0.18); }
+    @media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="main-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="logo-icon">◈</span><span>OpportUnity</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">◉</span> Dashboard</a>
+      <a href="opportunities.html"><span class="nav-icon">⊞</span> All Opportunities</a>
+      <a href="saved.html"><span class="nav-icon">◈</span> Saved</a>
+      <a href="applied.html"><span class="nav-icon">✓</span> Applied</a>
+      <a href="deadline-tracker.html"><span class="nav-icon">⏰</span> Deadlines</a>
+      <a href="email-sync.html"><span class="nav-icon">✉</span> Email Sync</a>
+      <a href="web-scraping.html"><span class="nav-icon">🌐</span> Web Scraping</a>
+      <a href="profile.html" class="active"><span class="nav-icon">◎</span> Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar">RK</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarName">Rahul Kumar</div>
+          <div class="user-email" id="sidebarEmail">rahul@iit.ac.in</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Profile & Settings</h1>
+      <p>Manage your account, preferences, and notification settings</p>
+    </div>
+
+    <div class="profile-grid">
+      <!-- PROFILE CARD -->
+      <div>
+        <div class="profile-card" style="margin-bottom:16px">
+          <div class="profile-avatar-lg" id="profileAvatar">RK</div>
+          <div class="profile-name" id="profileName">Rahul Kumar</div>
+          <div class="profile-email" id="profileEmail">rahul@iit.ac.in</div>
+          <div>
+            <span class="profile-tag" id="profileBranch">Computer Science</span>
+            <span class="profile-tag" id="profileYear">3rd Year</span>
+            <span class="profile-tag" id="profileUniversity">IIT Delhi</span>
+          </div>
+          <div class="profile-stats">
+            <div class="ps-item"><div class="ps-num">8</div><div class="ps-label">Saved</div></div>
+            <div class="ps-item"><div class="ps-num">3</div><div class="ps-label">Applied</div></div>
+            <div class="ps-item"><div class="ps-num">12</div><div class="ps-label">Days active</div></div>
+            <div class="ps-item"><div class="ps-num">24</div><div class="ps-label">Viewed</div></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">🔗 Connected Sources</div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">🎓 Internshala</div><div class="toggle-sub">Auto-scraping active</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">💻 Devpost</div><div class="toggle-sub">Auto-scraping active</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">💼 LinkedIn</div><div class="toggle-sub">Auto-scraping active</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">📧 Gmail</div><div class="toggle-sub">Connect to sync email alerts</div></div>
+            <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS FORMS -->
+      <div>
+        <div class="settings-section">
+          <div class="settings-title">👤 Personal Information</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" type="text" id="editName" placeholder="Your full name"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" id="editEmail" placeholder="your@email.com" readonly style="opacity:0.6"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">University</label>
+              <input class="form-input" type="text" id="editUniversity" placeholder="University name"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Branch</label>
+              <select class="form-input" id="editBranch">
+                <option>Computer Science</option>
+                <option>Electronics & Communication</option>
+                <option>Mechanical Engineering</option>
+                <option>Electrical Engineering</option>
+                <option>Information Technology</option>
+                <option>Data Science</option>
+                <option>MBA</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year of Study</label>
+            <select class="form-input" id="editYear" style="max-width:200px">
+              <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Postgraduate</option>
+            </select>
+          </div>
+          <button class="save-btn" onclick="saveProfile()">💾 Save Changes</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">🔔 Notification Preferences</div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">New Opportunities</div><div class="toggle-sub">Get notified when new matches are found</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Deadline Reminders</div><div class="toggle-sub">24h and 48h before deadline</div></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-label">Weekly Digest</div><div class="toggle-sub">Summary of top opportunities every Monday</div></div>
+            <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">⚠️ Danger Zone</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="danger-btn" onclick="if(confirm('Log out?')){localStorage.clear();window.location.href='index.html'}">🚪 Log out</button>
+            <button class="danger-btn" onclick="alert('Account deletion would require backend confirmation.')">🗑️ Delete Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("ohub_user") || "{}");
+  const name = user.name || "Student";
+  const email = user.email || "student@university.edu";
+  const initials = name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
+
+  document.getElementById("sidebarAvatar").textContent = initials;
+  document.getElementById("sidebarName").textContent = name;
+  document.getElementById("sidebarEmail").textContent = email;
+
+  document.getElementById("profileAvatar").textContent = initials;
+  document.getElementById("profileName").textContent = name;
+  document.getElementById("profileEmail").textContent = email;
+  document.getElementById("profileBranch").textContent = user.branch || "CS";
+  document.getElementById("profileYear").textContent = user.year || "3rd Year";
+  document.getElementById("profileUniversity").textContent = user.university || "University";
+
+  document.getElementById("editName").value = name;
+  document.getElementById("editEmail").value = email;
+  document.getElementById("editUniversity").value = user.university || "";
+});
+
+function saveProfile() {
+  const user = JSON.parse(localStorage.getItem("ohub_user") || "{}");
+  user.name = document.getElementById("editName").value;
+  user.university = document.getElementById("editUniversity").value;
+  user.branch = document.getElementById("editBranch").value;
+  user.year = document.getElementById("editYear").value;
+  localStorage.setItem("ohub_user", JSON.stringify(user));
+
+  const toast = document.createElement("div");
+  toast.className = "toast success";
+  toast.textContent = "✅ Profile saved!";
+  document.getElementById("toastContainer").appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+</script>
+</body>
+</html>

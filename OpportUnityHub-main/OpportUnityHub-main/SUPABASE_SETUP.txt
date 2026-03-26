@@ -1,0 +1,200 @@
+================================================================
+  OPPORTUNITYHUB — SUPABASE DATABASE SETUP GUIDE
+================================================================
+
+STEP 1: CREATE YOUR SUPABASE PROJECT
+--------------------------------------
+1. Go to https://supabase.com
+2. Click "New Project"
+3. Give it a name: OpportUnityHub
+4. Set a strong database password
+5. Choose a region close to you (e.g., South Asia - Mumbai)
+6. Click "Create new project" and wait ~2 minutes
+
+STEP 2: GET YOUR URL AND API KEY
+----------------------------------
+After project is created:
+  - Go to: Project Settings → API
+  - Copy:
+      Project URL  →  paste as YOUR_SUPABASE_URL
+      anon public  →  paste as YOUR_SUPABASE_ANON_KEY
+
+In your signup.html and login.html, replace:
+  const supabaseUrl = 'YOUR_SUPABASE_URL';
+  const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+
+
+================================================================
+  HOW MANY TABLES: 4 TABLES
+================================================================
+
+TABLE 1: profiles
+TABLE 2: opportunities
+TABLE 3: saved_opportunities
+TABLE 4: applied_opportunities
+
+
+================================================================
+  TABLE DETAILS — Go to Supabase → SQL Editor → New Query
+  Paste and run each CREATE TABLE block below
+================================================================
+
+----------------------------------------------------------------
+TABLE 1: profiles
+  Stores student profile info after signup.
+  Linked to Supabase Auth (auth.users) via user_id.
+----------------------------------------------------------------
+
+CREATE TABLE profiles (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name   TEXT,
+  email       TEXT,
+  university  TEXT,
+  branch      TEXT,
+  year        TEXT,
+  created_at  TIMESTAMP DEFAULT NOW()
+);
+
+-- Allow users to read/write only their own profile
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own profile"
+  ON profiles FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own profile"
+  ON profiles FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own profile"
+  ON profiles FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+
+----------------------------------------------------------------
+TABLE 2: opportunities
+  Stores all scraped opportunities from Internshala,
+  Devpost, Unstop, Remotive, etc.
+  This is the main data table shown on the dashboard.
+----------------------------------------------------------------
+
+CREATE TABLE opportunities (
+  id          TEXT PRIMARY KEY,
+  title       TEXT NOT NULL,
+  organization TEXT NOT NULL,
+  type        TEXT NOT NULL,       -- 'internship' | 'hackathon' | 'job'
+  location    TEXT,
+  deadline    TEXT,
+  stipend     TEXT,
+  apply_link  TEXT,
+  description TEXT,
+  source      TEXT NOT NULL,       -- 'internshala' | 'devpost' | 'unstop' | 'remotive'
+  domain      TEXT DEFAULT 'general',
+  verified    BOOLEAN DEFAULT TRUE,
+  logo        TEXT,
+  scraped_at  TIMESTAMP DEFAULT NOW()
+);
+
+-- Anyone can read opportunities (public data)
+ALTER TABLE opportunities ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read opportunities"
+  ON opportunities FOR SELECT USING (true);
+
+-- Only service role (backend) can insert/update
+CREATE POLICY "Service role can insert opportunities"
+  ON opportunities FOR INSERT WITH CHECK (true);
+
+
+----------------------------------------------------------------
+TABLE 3: saved_opportunities
+  Tracks which opportunities each user has bookmarked (★).
+  Currently stored in localStorage — this moves it to DB.
+----------------------------------------------------------------
+
+CREATE TABLE saved_opportunities (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  opportunity_id  TEXT REFERENCES opportunities(id) ON DELETE CASCADE,
+  saved_at        TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, opportunity_id)
+);
+
+ALTER TABLE saved_opportunities ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users manage own saved"
+  ON saved_opportunities FOR ALL USING (auth.uid() = user_id);
+
+
+----------------------------------------------------------------
+TABLE 4: applied_opportunities
+  Tracks which opportunities each user has marked as Applied (✓).
+  Currently stored in localStorage — this moves it to DB.
+----------------------------------------------------------------
+
+CREATE TABLE applied_opportunities (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  opportunity_id  TEXT REFERENCES opportunities(id) ON DELETE CASCADE,
+  applied_at      TIMESTAMP DEFAULT NOW(),
+  notes           TEXT,             -- optional: user notes about application
+  UNIQUE(user_id, opportunity_id)
+);
+
+ALTER TABLE applied_opportunities ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users manage own applied"
+  ON applied_opportunities FOR ALL USING (auth.uid() = user_id);
+
+
+================================================================
+  STEP 3: AUTO-CREATE PROFILE ON SIGNUP (Trigger)
+  Run this in SQL Editor too — it auto-fills profiles table
+  when a new user signs up via Supabase Auth.
+================================================================
+
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO profiles (user_id, full_name, email, university, branch, year)
+  VALUES (
+    NEW.id,
+    NEW.raw_user_meta_data->>'first_name' || ' ' || NEW.raw_user_meta_data->>'last_name',
+    NEW.email,
+    NEW.raw_user_meta_data->>'university',
+    NEW.raw_user_meta_data->>'branch',
+    NEW.raw_user_meta_data->>'year'
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+
+================================================================
+  SUMMARY OF ALL 4 TABLES
+================================================================
+
+  profiles              → student info (name, university, branch, year)
+  opportunities         → all scraped jobs/internships/hackathons
+  saved_opportunities   → user's bookmarked opportunities
+  applied_opportunities → user's applied opportunities
+
+================================================================
+  AFTER SETUP — UPDATE YOUR HTML FILES
+================================================================
+
+In signup.html and login.html, replace:
+  const supabaseUrl = 'YOUR_SUPABASE_URL';
+  const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+
+With your actual values from Supabase → Settings → API.
+
+Example (DO NOT use these — they are fake):
+  const supabaseUrl = 'https://xyzabcdef.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+
+================================================================
+  DONE! Your database is ready.
+================================================================

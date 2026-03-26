@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account — OpportUnity Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">◈</span>
+        <span>OpportUnity</span>
+      </a>
+      <h2 class="auth-tagline">Join 12,000+<br/><span class="gradient-text">students</span> who<br/>never miss out.</h2>
+      <p class="auth-desc">Create your profile in 60 seconds. We'll personalize opportunities based on your branch, year, and eligibility.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><div class="auth-feature-icon">🎯</div>Personalized by your branch & year</div>
+        <div class="auth-feature"><div class="auth-feature-icon">🔔</div>Deadline reminders via email</div>
+        <div class="auth-feature"><div class="auth-feature-icon">📊</div>Track applications in one place</div>
+        <div class="auth-feature"><div class="auth-feature-icon">🆓</div>Completely free, always</div>
+      </div>
+    </div>
+    <div class="auth-testimonial">
+      <div class="testimonial-text">"Got my first internship at Microsoft within 2 weeks of joining. The auto-filter by branch made it so easy."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:linear-gradient(135deg,var(--accent2),var(--accent3))">AS</div>
+        <div>
+          <div class="testimonial-name">Arjun Sharma</div>
+          <div class="testimonial-role">NIT Trichy · ECE 4th Year</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <h1 class="auth-form-title">Create your account</h1>
+      <p class="auth-form-sub">Already have one? <a href="login.html">Sign in →</a></p>
+
+      <button class="btn-google" onclick="handleMockGoogleSignup()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider">or create account with email</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First name</label>
+          <input class="form-input" type="text" id="firstName" placeholder="Rahul"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last name</label>
+          <input class="form-input" type="text" id="lastName" placeholder="Kumar"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" id="signupEmail" placeholder="you@university.edu"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">University / College</label>
+        <input class="form-input" type="text" id="university" placeholder="IIT Delhi"/>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Branch</label>
+          <select class="form-input" id="branch">
+            <option value="">Select branch</option>
+            <option>Computer Science</option>
+            <option>Electronics & Communication</option>
+            <option>Mechanical Engineering</option>
+            <option>Electrical Engineering</option>
+            <option>Civil Engineering</option>
+            <option>Information Technology</option>
+            <option>Data Science</option>
+            <option>MBA</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <select class="form-input" id="year">
+            <option value="">Select year</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+            <option>Postgraduate</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signupPassword" placeholder="Min. 8 characters"/>
+      </div>
+
+      <div id="signupError" style="display:none;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--accent-red)"></div>
+
+      <button class="btn-submit" onclick="handleSignup()" id="signupBtn">
+        Create my account →
+      </button>
+
+      <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:16px;line-height:1.6">
+        By signing up, you agree to our Terms of Service and Privacy Policy.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Replace these with your actual project URL and anon public API key
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function handleSignup() {
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const university = document.getElementById("university").value.trim();
+  const branch = document.getElementById("branch").value;
+  const year = document.getElementById("year").value;
+  const password = document.getElementById("signupPassword").value;
+
+  const errEl = document.getElementById("signupError");
+  const btn = document.getElementById("signupBtn");
+
+  if (!firstName || !email || !password) {
+    errEl.style.display = "block";
+    errEl.textContent = "Please fill all required fields.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Creating account...';
+  errEl.style.display = "none";
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        university: university,
+        branch: branch,
+        year: year
+      }
+    }
+  });
+
+  if (error) {
+    btn.disabled = false;
+    btn.innerHTML = 'Create my account →';
+    errEl.style.display = "block";
+    errEl.textContent = error.message;
+    return;
+  }
+
+  // store user session
+  localStorage.setItem("ohub_user", JSON.stringify({
+    email: email,
+    name: firstName + " " + lastName,
+    university: university || "Student"
+  }));
+
+  window.location.href = "dashboard.html";
+}
+
+async function handleMockGoogleSignup() {
+  const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+  if (error) console.error("Google Auth error:", error.message);
+}
+</script>
+</body>
+</html>

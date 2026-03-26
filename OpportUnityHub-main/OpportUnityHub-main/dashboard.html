@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — OpportUnity Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">◈</span>
+      <span>OpportUnity</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="active">
+        <span class="nav-icon">◉</span> Dashboard
+      </a>
+      <a href="opportunities.html">
+        <span class="nav-icon">⊞</span> All Opportunities
+      </a>
+      <a href="saved.html">
+        <span class="nav-icon">◈</span> Saved
+      </a>
+      <a href="applied.html">
+        <span class="nav-icon">✓</span> Applied
+      </a>
+      <a href="deadline-tracker.html">
+        <span class="nav-icon">⏰</span> Deadlines
+      </a>
+      <a href="email-sync.html">
+        <span class="nav-icon">✉</span> Email Sync
+      </a>
+      <a href="web-scraping.html">
+        <span class="nav-icon">🌐</span> Web Scraping
+      </a>
+      <a href="profile.html">
+        <span class="nav-icon">◎</span> Profile
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar">RK</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarName">Rahul Kumar</div>
+          <div class="user-email" id="sidebarEmail">rahul@iit.ac.in</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="page-header" style="margin-bottom:0">
+        <h1 id="greetingText">Good morning, Rahul 👋</h1>
+        <p>Here's what's happening with your opportunities today</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="live-fetch-btn" id="liveFetchBtn" onclick="fetchLiveOpportunities()">
+          <span id="liveFetchIcon">🌐</span>
+          <span id="liveFetchLabel">Fetch Live Opportunities</span>
+        </button>
+        <button class="filter-btn" onclick="triggerScrape()">🔄 Refresh</button>
+        <a href="index.html" class="btn-ghost">← Home</a>
+      </div>
+    </div>
+
+    <!-- DATA SOURCE STATUS BANNER -->
+    <div class="data-status-banner" id="dataStatusBanner">
+      <div class="dsb-left">
+        <span class="dsb-dot" id="dsbDot"></span>
+        <span id="dsbText">Empty data — click <strong>Fetch Live</strong> to load real opportunities</span>
+      </div>
+      <div class="dsb-sources" id="dsbSources">
+        <span class="source-chip">🎓 Internshala</span>
+        <span class="source-chip">💻 Devpost</span>
+        <span class="source-chip">🚀 Unstop</span>
+        <span class="source-chip">🌍 Remotive</span>
+      </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div class="scrape-overlay" id="scrapeOverlay" style="display:none">
+      <div class="scrape-overlay-inner">
+        <div class="scrape-spinner"></div>
+        <div class="scrape-overlay-title">Fetching live opportunities…</div>
+        <div class="scrape-overlay-sub" id="scrapeOverlaySub">Scraping Internshala, Devpost, Unstop &amp; Remotive</div>
+        <div class="scrape-progress-bar"><div class="scrape-progress-fill" id="scrapeProgressFill"></div></div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card" style="--accent-color: var(--accent)">
+        <div class="stat-card-label">Total Opportunities</div>
+        <div class="stat-card-value" id="totalCount">—</div>
+        <div class="stat-card-sub">across all sources</div>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--accent2)">
+        <div class="stat-card-label">Internships</div>
+        <div class="stat-card-value" id="internshipCount">—</div>
+        <div class="stat-card-sub">available now</div>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--accent3)">
+        <div class="stat-card-label">Hackathons</div>
+        <div class="stat-card-value" id="hackathonCount">—</div>
+        <div class="stat-card-sub">open for registration</div>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--accent-warn)">
+        <div class="stat-card-label">Saved</div>
+        <div class="stat-card-value" id="savedCount">—</div>
+        <div class="stat-card-sub" id="appliedCountSub">applied: 0</div>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--accent)">
+        <div class="stat-card-label">Your Opportunities</div>
+        <div class="stat-card-value" id="yoursCount">—</div>
+        <div class="stat-card-sub">saved & applied</div>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--accent2)">
+        <div class="stat-card-label">Your Internships</div>
+        <div class="stat-card-value" id="yrIntCount">—</div>
+        <div class="stat-card-sub">interested</div>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--accent3)">
+        <div class="stat-card-label">Your Hackathons</div>
+        <div class="stat-card-value" id="yrHackCount">—</div>
+        <div class="stat-card-sub">interested</div>
+      </div>
+      <div class="stat-card" style="opacity:0;pointer-events:none"></div>
+    </div>
+
+    <!-- DEADLINE TRACKER -->
+    <div class="deadline-section">
+      <div class="section-heading">
+        <h2>⏰ Deadline Tracker</h2>
+        <a href="deadline-tracker.html" class="see-all-link">Full view →</a>
+      </div>
+      <div class="deadline-timeline" id="deadlineTimeline">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- SEARCH & FILTER -->
+    <div class="search-filter-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search companies, roles, technologies..."/>
+      </div>
+      <select class="filter-select" id="typeFilter">
+        <option value="">All Types</option>
+        <option value="internship">Internship</option>
+        <option value="hackathon">Hackathon</option>
+        <option value="job">Job</option>
+      </select>
+      <select class="filter-select" id="domainFilter">
+        <option value="general">All Domains</option>
+        <option value="ai">🤖 AI / ML</option>
+        <option value="web">🌐 Web Dev</option>
+        <option value="data">📊 Data Science</option>
+        <option value="design">🎨 Design</option>
+        <option value="mobile">📱 Mobile</option>
+      </select>
+      <select class="filter-select" id="locationFilter">
+        <option value="all">All Locations</option>
+        <option value="remote">🏠 Remote</option>
+        <option value="onsite">🏢 On-site</option>
+      </select>
+      <select class="filter-select" id="sourceFilter">
+        <option value="">All Sources</option>
+        <option value="internshala">Internshala</option>
+        <option value="devpost">Devpost</option>
+        <option value="unstop">Unstop</option>
+        <option value="remotive">Remotive</option>
+      </select>
+      <select class="filter-select" id="deadlineFilter">
+        <option value="">Any Deadline</option>
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="twoweeks">Next 2 Weeks</option>
+      </select>
+      <button class="filter-btn active" id="allBtn" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('internship', this)">Internships</button>
+      <button class="filter-btn" onclick="setFilter('hackathon', this)">Hackathons</button>
+    </div>
+
+    <!-- OPPORTUNITIES -->
+    <div class="section-heading">
+      <h2>🌟 Opportunities for You</h2>
+      <span id="resultCount" class="see-all-link" style="color:var(--text-muted)"></span>
+    </div>
+    <div class="cards-grid" id="cardsGrid">
+      <!-- Populated by JS -->
+    </div>
+
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="empty-icon">🔍</div>
+      <h3>No matches found</h3>
+      <p>Try adjusting your filters or search query</p>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="data.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
